@@ -15,15 +15,13 @@ fastafile =  os.path.realpath(sys.argv[1])
 outdir = os.path.realpath(sys.argv[2])
 
 
-popenmm = False
+
 pclu    = False
 if len(sys.argv) == 4 and sys.argv[3] == '1': 
-    print('will do OPENMM refine')
-    popenmm = True
-
-if len(sys.argv) == 5 and sys.argv[4] == '1': 
-    print('will clu')
+    print('will do cluster')
     pclu = True
+
+
 
 
 
