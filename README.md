@@ -71,7 +71,7 @@ python script/refine.py [input pdb] [output pdb]
 ## Example Usage
 
 ```bash
-python DRfold_infer.py test/8fza_A/seq.fasta test/8fza_A/ 1
+python DRfold_infer.py test/seq.fasta test/8fza_A/ 1
 ```
 
 The final results can be found in `test/8fza_A/relax/`.
