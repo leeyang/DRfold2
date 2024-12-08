@@ -1,0 +1,17 @@
+{
+    "weight_pp" : 0,
+    "weight_cc" : 0,
+    "weight_nn" : 0,
+    "weight_pccp": 0,
+    "weight_cnnc": 0,
+    "weight_pnnp": 0,
+    "weight_pcc" :0,
+    "weight_cnn": 0,
+    "weight_pnn": 0,
+    "weight_vdw": 0.5,
+    "weight_nn_contact":0,
+    "weight_cc_contact":0,
+    "weight_beta": 0,
+    "weight_fape": 0,
+    "weight_bond": 100
+}
