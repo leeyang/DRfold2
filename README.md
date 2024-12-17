@@ -11,8 +11,8 @@ DRfold2 is a deep learning method for RNA structure prediction. At its core, DRf
 
 - Advanced RNA Composite Language Model (RCLM)
 - End-to-end structure and geometry prediction
-- Optimized post-processing protocol
-- Superior performance in both 3D structure prediction and 2D base pair modeling
+- Optimization protocol
+
 
 ## Installation
 
