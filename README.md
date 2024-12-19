@@ -96,7 +96,7 @@ If you use DRfold2 in your research, please cite:
 @article{li2024drfold2,
   title={Integrating composite language model for enhanced ab initio RNA structure prediction},
   author={Li, Yang et al.},
-  journal={submitted},
+  journal={},
   year={2024}
 }
 ```
