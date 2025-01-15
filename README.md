@@ -23,6 +23,7 @@ DRfold2 is a deep learning method for RNA structure prediction. At its core, DRf
 - PyTorch (tested on 1.11, 2.01, and 2.21)
 - NumPy
 - SciPy
+- BioPython 
 
 #### Optional Dependencies
 - OpenMM (required for structure refinement) - [Installation Guide](https://openmm.org/)
