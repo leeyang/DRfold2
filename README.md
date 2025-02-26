@@ -1,4 +1,4 @@
-# DRfold2: Integrating Composite Language Model for Enhanced Ab Initio RNA Structure Prediction
+# DRfold2: Ab initio RNA structure prediction with composite language model and denoised end-to-end learning
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-1.11%2B-red)](https://pytorch.org/)
@@ -95,16 +95,16 @@ Please report any issues or bugs on our [GitHub Issues page](https://github.com/
 If you use DRfold2 in your research, please cite:
 ```bibtex
 @article{li2024drfold2,
-  title={Integrating composite language model for enhanced ab initio RNA structure prediction},
-  author={Li, Yang et al.},
+  title={Ab initio RNA structure prediction with composite language model and denoised end-to-end learning},
+  author={Yang Li, Chenjie Feng, Xi Zhang, Yang Zhang.},
   journal={},
-  year={2024}
+  year={2025}
 }
 ```
 
 ## License
 
-Copyright (c) 2024 Yang Li
+Copyright (c) 2025 Yang Li
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
