@@ -94,7 +94,7 @@ Please report any issues or bugs on our [GitHub Issues page](https://github.com/
 
 If you use DRfold2 in your research, please cite:
 ```bibtex
-@article{li2024drfold2,
+@article{li2025drfold2,
   title={Ab initio RNA structure prediction with composite language model and denoised end-to-end learning},
   author={Yang Li, Chenjie Feng, Xi Zhang, Yang Zhang.},
   journal={},
