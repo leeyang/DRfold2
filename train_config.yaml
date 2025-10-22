@@ -1,0 +1,212 @@
+# DRfold2 Training Configuration
+# Complete training setup for RNA structure prediction
+
+# Model Configuration
+model:
+  config_name: "cfg_95"  # Which configuration to train (cfg_95, cfg_96, cfg_97, cfg_99)
+  model_hub_path: "./model_hub/RCLM"  # Path to pre-trained language model
+  use_pretrained_lm: true  # Use pre-trained RNA language model
+  freeze_language_model: false  # Whether to freeze LM weights during training
+
+  # Architecture parameters (from EvoMSA2XYZ)
+  m_dim: 64  # MSA embedding dimension
+  z_dim: 64  # Pair embedding dimension
+  s_dim: 512  # Sequence embedding from language model
+  z_lm_dim: 128  # Pair embedding from language model
+  n_layer: 16  # Number of Evoformer layers
+  n_head: 8  # Number of attention heads
+
+  # Structure module
+  n_structure_layer: 8  # Number of structure module layers
+  n_structure_block: 1  # Number of structure blocks
+
+  # Recycling
+  n_recycle_train: 3  # Number of recycling iterations during training
+  n_recycle_val: 4  # Number of recycling iterations during validation
+
+  # Dropout and regularization
+  attdrop: 0.1  # Attention dropout rate
+  dropout: 0.1  # General dropout rate
+
+# Training Configuration
+training:
+  # Basic settings
+  num_epochs: 100
+  batch_size: 1  # Start with 1 due to memory constraints
+  gradient_accumulation_steps: 8  # Effective batch size = 8
+  max_sequence_length: 512  # Maximum RNA sequence length
+
+  # Learning rate
+  learning_rate: 1.0e-4
+  warmup_steps: 1000
+  lr_scheduler: "cosine"  # Options: "cosine", "linear", "constant"
+  min_lr: 1.0e-6
+
+  # Optimizer
+  optimizer: "adam"  # Options: "adam", "adamw"
+  weight_decay: 0.01
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_eps: 1.0e-8
+
+  # Gradient clipping
+  gradient_clip_norm: 1.0
+
+  # Mixed precision training
+  use_amp: true  # Automatic Mixed Precision
+  amp_dtype: "float16"  # Options: "float16", "bfloat16"
+
+  # Checkpointing
+  checkpoint_every: 1000  # Save checkpoint every N steps
+  keep_last_n_checkpoints: 5
+  save_best_model: true
+
+  # Validation
+  validate_every: 500  # Validate every N steps
+  validation_metric: "total_loss"  # Metric to monitor for best model
+
+  # Logging
+  log_every: 50  # Log metrics every N steps
+  log_gradients: false
+  use_wandb: false  # Set to true to enable Weights & Biases logging
+  wandb_project: "drfold2-training"
+
+  # Distributed training
+  distributed: false
+  num_gpus: 1
+  find_unused_parameters: false
+
+# Loss Function Weights
+loss_weights:
+  # Distance losses (for P, C4', N atoms)
+  weight_pp: 1.0  # Phosphate-phosphate distance
+  weight_cc: 1.0  # C4'-C4' distance
+  weight_nn: 1.0  # Nitrogen-nitrogen distance
+  weight_distance: 2.0  # Overall distance loss weight
+
+  # Structure losses
+  weight_fape: 1.0  # Frame Aligned Point Error
+  weight_structure: 1.0  # Overall structure RMSD
+
+  # Chemical constraints
+  weight_bond: 0.5  # Bond length constraints
+  weight_angle: 0.3  # Bond angle constraints
+  weight_torsion: 0.2  # Torsion angle constraints
+  weight_vdw: 0.1  # Van der Waals constraints
+
+  # Confidence and auxiliary losses
+  weight_lddt: 0.5  # pLDDT confidence loss
+  weight_contact: 0.3  # Contact prediction loss
+  weight_msa: 0.0  # MSA masking loss (set to 0 if not using)
+
+  # FAPE parameters
+  fape_clamp_distance: 10.0  # Maximum distance for FAPE (Ångströms)
+  fape_loss_unit_distance: 10.0
+
+  # Geometric parameters
+  geo_scale: 1.0
+  pair_weight_power: 2.0
+  pair_error_power: 2.0
+  fape_max: 30.0
+
+# Data Configuration
+data:
+  # Training data
+  train_data_dir: "./data/train"  # Directory containing training PDB files
+  train_fasta_dir: "./data/train_fasta"  # Directory containing FASTA files
+  train_list: null  # Optional: path to file listing training examples
+
+  # Validation data
+  val_data_dir: "./data/val"
+  val_fasta_dir: "./data/val_fasta"
+  val_list: null
+
+  # Test data
+  test_data_dir: "./data/test"
+  test_fasta_dir: "./data/test_fasta"
+  test_list: null
+
+  # Data processing
+  num_workers: 4  # Number of data loading workers
+  prefetch_factor: 2
+  pin_memory: true
+
+  # Data augmentation
+  use_augmentation: true
+  augmentation:
+    random_rotation: true  # Random 3D rotation of structures
+    rotation_prob: 0.5
+    random_noise: true  # Add small noise to coordinates
+    noise_std: 0.1  # Standard deviation in Ångströms
+    coordinate_dropout: false  # Randomly mask some coordinates
+    coordinate_dropout_prob: 0.1
+
+  # Filtering
+  min_sequence_length: 10
+  max_sequence_length: 512
+  filter_resolution: 3.5  # Maximum resolution in Ångströms (for PDB files)
+
+  # MSA generation (if needed)
+  generate_msa: false  # Set to true if you want to generate MSAs
+  msa_tool: "infernal"  # Options: "infernal", "blastn"
+  max_msa_sequences: 128
+
+# Validation Metrics
+validation:
+  compute_tm_score: true  # Compute TM-score (requires TMscore binary)
+  compute_rmsd: true  # Compute RMSD
+  compute_contact_precision: true  # Contact map precision
+  contact_threshold: 8.0  # Ångströms
+  compute_plddt: true  # Compute pLDDT metrics
+
+  # Save validation predictions
+  save_val_structures: true
+  val_output_dir: "./validation_outputs"
+  save_every_n_epochs: 5
+
+# Hardware Configuration
+hardware:
+  device: "cuda"  # Options: "cuda", "cpu"
+  cuda_device_ids: [0]  # GPU IDs to use
+  cudnn_benchmark: true
+  cudnn_deterministic: false
+
+  # Memory optimization
+  gradient_checkpointing: true  # Use gradient checkpointing to save memory
+  empty_cache_every: 100  # Empty CUDA cache every N steps
+
+# Reproducibility
+reproducibility:
+  seed: 42
+  deterministic: false  # Set to true for full reproducibility (slower)
+
+# Output Configuration
+output:
+  output_dir: "./training_outputs"
+  checkpoint_dir: "./checkpoints"
+  log_dir: "./logs"
+  tensorboard_dir: "./tensorboard"
+
+  # Create directories if they don't exist
+  create_dirs: true
+
+# Resume Training
+resume:
+  resume_from_checkpoint: null  # Path to checkpoint to resume from
+  load_optimizer_state: true  # Load optimizer state from checkpoint
+  load_scheduler_state: true  # Load LR scheduler state from checkpoint
+  reset_epoch: false  # Reset epoch counter
+
+# Early Stopping
+early_stopping:
+  enabled: false
+  patience: 10  # Number of epochs without improvement before stopping
+  min_delta: 0.001  # Minimum change to qualify as improvement
+  monitor: "val_total_loss"  # Metric to monitor
+
+# Debug Configuration
+debug:
+  debug_mode: false  # Enable debug mode for more logging
+  check_nan: true  # Check for NaN in gradients and activations
+  profile: false  # Enable profiling
+  save_first_batch: false  # Save first batch for debugging
